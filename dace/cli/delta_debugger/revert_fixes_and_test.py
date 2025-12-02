@@ -31,14 +31,14 @@ def main():
 
     try:
         sdfg_file, args, commit = get_sdfg_args_commit()
-        run_cmd(f"git checkout {commit}")
+        sdfg = SDFG.from_file(sdfg_file)
+        run_cmd(f"git checkout {commit} --recurse-submodules")
         # run_cmd(f"git revert {commit} --no-commit")
         
-        sdfg = SDFG.from_file(sdfg_file)
         sdfg(**args)
 
     finally:
-        run_cmd("git checkout delta_debugger")
+        run_cmd("git checkout delta_debugger --recurse-submodules")
         # run_cmd("git reset --hard")
 
 
