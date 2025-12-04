@@ -12,14 +12,14 @@ def run_cmd(cmd):
 def main():
 
     try:
-        pre_fix_commit = "fc8fea3"
+        pre_fix_commit = "afbcb5f^"
         post_fix_commit = "afbcb5f"
 
         import dace
         sdfg_file = os.path.join(BASE_DIR, "test_sdfgs", "stage1.sdfgz.txt")
         sdfg = dace.SDFG.from_file(sdfg_file)
 
-        run_cmd(f"git -c advice.detachedHead=false checkout {post_fix_commit} --recurse-submodules")
+        run_cmd(f"git -c advice.detachedHead=false checkout {pre_fix_commit} --recurse-submodules")
         # run_cmd(f"git revert {commit} --no-commit")
         
         importlib.reload(dace)
