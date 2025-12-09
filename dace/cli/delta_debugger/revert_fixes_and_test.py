@@ -32,28 +32,12 @@ def test_issue_2100():
     """
     pre_fix_commit = "21bf47e^"
     post_fix_commit = "21bf47e"
+    import dace
+    from sdfgs_for_testing import get_fill_sdfg
     checkout_commit(post_fix_commit)
 
-    import dace as dc
-    N = dc.symbol('N')
-
-    @dc.program
-    def global_matmul(C: dc.float32[N, N] @ dc.StorageType.GPU_Global):
-        for i, j in dc.map[0:N:N, 0:N:N] @ dc.ScheduleType.GPU_Device:
-
-            for l in dc.map[0:64] @ dc.ScheduleType.GPU_ThreadBlock:
-
-                c = dc.ndarray(
-                    [N, N],
-                    dtype=dc.float32,
-                    storage=dc.StorageType.Register,
-                    strides=(N, 1),
-                )
-
-                for k in dc.map[0:1] @ dc.ScheduleType.Sequential:
-                    c.fill(0.0)
-
-                C[i:i + N, j:j + N] = c[:, :]
+    importlib.reload(dace)
+    global_matmul = get_fill_sdfg()
 
     sdfg = global_matmul.to_sdfg(simplify=False)
     sdfg.validate()
